@@ -93,13 +93,8 @@ public class nstalkc {
 				}
 				
 				s.receive(ack); //receive ACK packet from server
-				ack.setData(msg.getData());
-				//System.err.println("ACK[" + msgnum + "] Arrived:");
 				String str = new String(ack.getData());
-				System.err.println("ACK[" + msgnum + "] Arrived: " + str + "\n"); //Prints out received ACK packet
-				
-
-				
+				System.err.println(str + "\n"); //Prints out received ACK packet
 			}
             catch (IOException ioe) {
                 System.err.println("send() failed");

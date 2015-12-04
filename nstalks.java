@@ -49,15 +49,15 @@ public class nstalks {
             try {
 					msg.setLength(bufsize);
 					s.receive(msg); //Receives message
-					String str = new String(msg.getData());
+					String str = new String(msg.getData(), HSIZE, msg.getLength()-HSIZE);
 					msgnum = getmsgnum(msg.getData());
 					System.err.println("message from <" +
 							msg.getAddress().getHostAddress() +
 							"," + msg.getPort() + ">");
 					byte[] ack = new byte[msg.getData().length];
-					ack = ("ACK[" + msgnum + "]:" + str).getBytes();
+					ack = ("ACK[" + msgnum + "]").getBytes();					
 					s.send(new DatagramPacket(ack,ack.length,msg.getAddress(),msg.getPort())); //Sends ACK
-					System.err.println("Acknowledgement sent");
+					System.err.println("Acknowledgement sent\n");
            } catch (SocketTimeoutException ste) {
                     System.err.println("Response timed out!");
                     continue;
@@ -65,8 +65,6 @@ public class nstalks {
                     System.err.println("Bad receive");
                     break;
             }
-            String str = new String(msg.getData(), HSIZE, msg.getLength()-HSIZE);
-            System.out.println( "" + msgnum + ": " + str);        // println inserts newline at end
         } // end of read loop
         s.close();
     } // end of main
