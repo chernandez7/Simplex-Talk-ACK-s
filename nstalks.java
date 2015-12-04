@@ -1,4 +1,3 @@
-
 /* simpletalk server with numbered messages, UDP version */
 /* data format: 
    +--------+-----------------------+
@@ -49,8 +48,7 @@ public class nstalks {
         while(true) { // read loop
             try {
 					msg.setLength(bufsize);
-					s.receive(msg);
-					
+					s.receive(msg); //Receives message
 					String str = new String(msg.getData());
 					msgnum = getmsgnum(msg.getData());
 					System.err.println("message from <" +
@@ -58,13 +56,8 @@ public class nstalks {
 							"," + msg.getPort() + ">");
 					byte[] ack = new byte[msg.getData().length];
 					ack = ("ACK[" + msgnum + "]:" + str).getBytes();
-					//System.out.println("Sending back acknowledge to client");
-					s.send(new DatagramPacket(ack,ack.length,msg.getAddress(),msg.getPort()));
+					s.send(new DatagramPacket(ack,ack.length,msg.getAddress(),msg.getPort())); //Sends ACK
 					System.err.println("Acknowledgement sent");
-					
-					ack = null;
-					str = null;
-						
            } catch (SocketTimeoutException ste) {
                     System.err.println("Response timed out!");
                     continue;

@@ -15,7 +15,7 @@ public class nstalkc {
     static public BufferedReader bin;
     static public int destport = 5433;
     static public int bufsize = 512;
-    static public short msgnum = 1;
+    static public short msgnum = 0;
     static public final int HSIZE = 2;
 
     //============================================================
@@ -79,22 +79,32 @@ public class nstalkc {
             msg.setLength(slen+HSIZE);
 
             try {
-                s.send(msg);
-				byte[] ack = new byte[128];
-				ack = ("ACK[" + msgnum + "]:" + msg.getData()).getBytes();
-				DatagramPacket dp = new DatagramPacket(ack, ack.length);
-				s.receive(dp); //receive ACK packet from server
-				String str = new String(dp.getData());
-				System.err.println(str);
+				long startTime = System.currentTimeMillis();
 				
-				str = null;
-				ack = null;
-				//msg = null;
-            }
+				s.send(msg); //Sends original message
+				byte[] ackByte = new byte[128]; //1 KB	
+		
+				DatagramPacket ack = new DatagramPacket(ackByte, ackByte.length);
+				
+				if (startTime == startTime+2000) //if hasen't received ACK in 2 seconds
+				{
+                    System.err.println("ACK timed out!");
+					s.send(msg); //Sends original message again
+				}
+				
+				s.receive(ack); //receive ACK packet from server
+				ack.setData(msg.getData());
+				//System.err.println("ACK[" + msgnum + "] Arrived:");
+				String str = new String(ack.getData());
+				System.err.println("ACK[" + msgnum + "] Arrived: " + str + "\n"); //Prints out received ACK packet
+				
+
+				
+			}
             catch (IOException ioe) {
                 System.err.println("send() failed");
                 return;
-            }
+            }			
         } // while
         s.close();
     }

@@ -1,0 +1,11 @@
+Christopher Hernandez
+COMP 343
+
+If a client stops and is restarted, it will resume with message_id = 1. Can this be a problem?
+	Theoretically it can be a problem because it can cause the program to deadlock. It will always be waiting for ACK[N] but the program will be sending it as ACK[N+1].
+
+Any packet coming back from the server can be assumed to be an acknowledgement. Are there any potential problems with this assumption?
+	Not really. It should always be acknowledgements but you can't always assume that it will always be the corresponding acknowledgement. For example in the old duplicate problem it may be a previous acknowledgement from another connection.
+
+Will this acknowledgement version of the protocol work through a NAT firewall?
+	A NAT firewall blocks all unrequested inbound traffic, since the ACK isn't explicitly requested then it will not work trhough a NAT firewall.
